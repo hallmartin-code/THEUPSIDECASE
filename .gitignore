@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+.cache/
+output/*.pdf
+output/*.json
+inputs/*
+!inputs/.gitkeep

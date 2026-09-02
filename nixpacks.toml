@@ -1,0 +1,19 @@
+# Railway / Nixpacks build configuration.
+#
+# Deliberately lean. Every runtime dependency ships a self-contained wheel:
+# ReportLab draws with built-in Type 1 core fonts, so no system fonts are
+# needed, and nothing here shells out to a binary.
+
+[phases.setup]
+nixPkgs = ["python311"]
+
+[phases.install]
+cmds = [
+  "python -m venv /opt/venv",
+  ". /opt/venv/bin/activate && pip install --no-cache-dir -r requirements.txt",
+]
+
+[variables]
+PYTHONUNBUFFERED = "1"
+PYTHONDONTWRITEBYTECODE = "1"
+PIP_DISABLE_PIP_VERSION_CHECK = "1"

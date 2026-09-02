@@ -1,0 +1,573 @@
+{
+  "template_name": "TEN Capital Upside Case One-Pager",
+  "template_version": "1.0",
+  "description": "Canonical structure for every upside-case one-pager the generator produces. Section order, zone assignment, table columns, length budgets, provenance rules and per-field analysis guidance are defined here — this file describes the document, never a particular company. Every value on the page is a placeholder to be filled at render time.",
+
+  "document": {
+    "page_size": "letter",
+    "orientation": "landscape",
+    "margin_in": 0.42,
+    "max_pages": 1,
+    "columns": 3,
+    "column_gap_in": 0.2,
+    "title_pattern": "{{COMPANY NAME}} — Upside Case",
+    "filename_pattern": "{{company_slug}}_upside_case.pdf",
+    "sidecar_pattern": "{{company_slug}}_upside_case.json",
+    "missing_marker": "—",
+    "pre_launch_marker": "Pre-launch",
+    "pre_revenue_marker": "Pre-revenue"
+  },
+
+  "provenance": {
+    "description": "Every material value carries one of these classifications. An assumption is never presented as though management supplied it, and an assumption is never HIGH confidence.",
+    "source_types": [
+      { "id": "DECK", "meaning": "Stated in the pitch deck. Cited to a slide, with the supporting quote." },
+      { "id": "RESEARCH", "meaning": "Retrieved from an external source. Requires a URL or it is discarded." },
+      { "id": "ASSUMPTION", "meaning": "Introduced by the analysis because the input was unavailable. Carries its rationale." },
+      { "id": "CALCULATED", "meaning": "Derived in Python from other inputs. Carries its formula." }
+    ],
+    "confidence_levels": ["HIGH", "MEDIUM", "LOW"],
+    "ledger_row": "metric | value | source_type | source | confidence | notes | unit"
+  },
+
+  "fixed_fields": [
+    {
+      "key": "firm_name",
+      "label": "Firm",
+      "source": "config.FIRM_NAME",
+      "note": "Not analyzed. Printed top-left of the header band above the document title."
+    },
+    {
+      "key": "document_title",
+      "label": "Document title",
+      "source": "pattern",
+      "pattern": "UPSIDE CASE  |  {{COMPANY NAME}}",
+      "note": "Not analyzed. Set as large as the header strip allows, then shrunk to fit."
+    },
+    {
+      "key": "document_subtitle",
+      "label": "Document subtitle",
+      "source": "config.DOC_SUBTITLE",
+      "pattern": "What the company could look like if the plan works",
+      "note": "Not analyzed. Fixed italic line at the foot of the header band."
+    },
+    {
+      "key": "scenario_disclaimer",
+      "label": "Scenario disclaimer",
+      "source": "fixed",
+      "pattern": "Success-case scenario, not a forecast or a management projection.",
+      "note": "Not analyzed. Required on every page: the document must state that it is a success case."
+    },
+    {
+      "key": "analysis_date",
+      "label": "Analysis date",
+      "source": "run date",
+      "note": "Not analyzed. Printed as DD Month YYYY at the end of the header fact strip. Also the anchor for every 'from today' horizon on the page."
+    },
+    {
+      "key": "confidentiality",
+      "label": "Confidentiality line",
+      "source": "config.CONFIDENTIALITY",
+      "pattern": "Confidential – for recipients only.",
+      "note": "Not analyzed. Fixed text at the foot of the footer band."
+    },
+    {
+      "key": "firm_logo",
+      "label": "Firm logo",
+      "source": "assets/TEN_Capital_logo_footer.png",
+      "note": "Not analyzed. Bottom-right of the footer band. Omitted if the asset is absent; never substituted or imitated."
+    }
+  ],
+
+  "zones": [
+    {
+      "id": "header",
+      "label": "Header band",
+      "placement": "full width, top",
+      "height_in": 0.86,
+      "style": "navy band; white title, pale-blue firm name, fact strip and italic disclaimers"
+    },
+    {
+      "id": "column_1",
+      "label": "Left column",
+      "placement": "body, first of three",
+      "style": "numbered navy heading, hairline rule, body prose and tables"
+    },
+    {
+      "id": "column_2",
+      "label": "Centre column",
+      "placement": "body, second of three",
+      "style": "numbered navy heading, hairline rule, body prose and tables"
+    },
+    {
+      "id": "column_3",
+      "label": "Right column",
+      "placement": "body, third of three",
+      "style": "numbered navy heading, hairline rule, body prose and lists"
+    },
+    {
+      "id": "footer",
+      "label": "Footer band",
+      "placement": "full width, bottom",
+      "min_height_in": 0.62,
+      "max_height_in": 1.55,
+      "style": "light band under a navy rule; flags in accent red, sources in muted grey"
+    }
+  ],
+
+  "sections": [
+    { "number": 1, "key": "success_case", "heading": "The success case", "zone": "column_1" },
+    { "number": 2, "key": "value_creation", "heading": "Five-year value creation", "zone": "column_1" },
+    { "number": 3, "key": "revenue_build", "heading": "Revenue build", "zone": "column_2" },
+    { "number": 4, "key": "valuation_return", "heading": "Valuation & investor return", "zone": "column_2" },
+    { "number": 5, "key": "benchmark", "heading": "Real-world benchmark", "zone": "column_3" },
+    { "number": 6, "key": "what_has_to_be_true", "heading": "What has to be true", "zone": "column_3" },
+    { "number": 7, "key": "interpretation", "heading": "Investment interpretation", "zone": "column_3" }
+  ],
+
+  "fields": [
+    {
+      "key": "company_name",
+      "label": "Company name",
+      "zone": "header",
+      "type": "text",
+      "max_words": 8,
+      "required": true,
+      "source_types": ["DECK"],
+      "placeholder": "{{COMPANY NAME}}",
+      "guidance": "Trading or legal name exactly as written on the deck. Falls back to the deck filename stem if the deck never names the company.",
+      "source_hint": "Cover slide, deck footer, or the legal slide."
+    },
+    {
+      "key": "sector",
+      "label": "Sector",
+      "zone": "header",
+      "type": "text",
+      "max_words": 8,
+      "required": false,
+      "source_types": ["DECK"],
+      "placeholder": "{{SECTOR}}",
+      "guidance": "Sector or category in the deck's own words. First element of the header fact strip.",
+      "source_hint": "Positioning or 'what we do' slide."
+    },
+    {
+      "key": "round_summary",
+      "label": "Round on offer",
+      "zone": "header",
+      "type": "text",
+      "max_words": 8,
+      "required": false,
+      "source_types": ["DECK"],
+      "placeholder": "{{ROUND SIZE}} {{INSTRUMENT}}",
+      "guidance": "Round size and security composed into one phrase. Omitted from the strip if the deck states neither.",
+      "source_hint": "The ask or terms slide."
+    },
+    {
+      "key": "stage",
+      "label": "Current stage",
+      "zone": "header",
+      "type": "text",
+      "max_words": 6,
+      "required": false,
+      "source_types": ["DECK"],
+      "placeholder": "{{CURRENT DEVELOPMENT OR COMMERCIAL STAGE}}",
+      "guidance": "Development or commercial stage as the deck describes it, trimmed to a label rather than a clause.",
+      "source_hint": "Timeline, status or milestone slide."
+    },
+
+    {
+      "key": "success_case",
+      "label": "Success-case narrative",
+      "zone": "column_1",
+      "section": "success_case",
+      "type": "narrative",
+      "min_words": 110,
+      "max_words": 140,
+      "hard_max_words": 150,
+      "required": true,
+      "source_types": ["CALCULATED", "ASSUMPTION"],
+      "placeholder": "{{CAUSAL NARRATIVE FROM TODAY TO COMMERCIAL SCALE: the gating milestone, the launch, the adoption mechanism, the revenue inflection, the financing that carries it}}",
+      "guidance": "One paragraph tracing the path from today to commercial scale, using only figures already computed. Name the gating milestone, the launch, how accounts are won, and where revenue inflects. Must end on a complete sentence.",
+      "must_not": "Generic momentum statements such as 'the company gains significant traction'. Every clause names something that has to happen."
+    },
+
+    {
+      "key": "value_creation_table",
+      "label": "Five-year value creation",
+      "zone": "column_1",
+      "section": "value_creation",
+      "type": "table",
+      "required": true,
+      "source_types": ["CALCULATED", "DECK"],
+      "column_widths": [0.295, 0.235, 0.235, 0.235],
+      "columns": [
+        { "key": "metric", "label": "Metric", "align": "left" },
+        { "key": "today", "label": "Today", "align": "right", "placeholder": "{{VALUE TODAY}}" },
+        { "key": "horizon_3", "label": "{{3-YEAR HORIZON LABEL}}", "align": "right", "placeholder": "{{VALUE AT 3 YEARS}}", "note": "Header reads '{{CALENDAR YEAR}} · CY{{n}}', measured three years from the analysis date, never from the deck's calendar." },
+        { "key": "horizon_5", "label": "{{5-YEAR HORIZON LABEL}}", "align": "right", "placeholder": "{{VALUE AT 5 YEARS}}", "note": "As above, five years from the analysis date." }
+      ],
+      "rows": [
+        { "key": "revenue", "label": "Revenue", "format": "money", "today_source": "deck, else 'Pre-revenue'" },
+        { "key": "active_units", "label": "Active {{ADOPTION UNIT PLURAL}}", "format": "count", "today_source": "deck customer/account count" },
+        { "key": "beneficiaries", "label": "{{BENEFICIARY LABEL}}", "format": "count", "today_source": "deck user/patient count" },
+        { "key": "penetration", "label": "Penetration", "format": "percent", "note": "Against the bottoms-up addressable base, not management's TAM." },
+        { "key": "implied_value", "label": "Implied value", "format": "money_range", "today_source": "deck post-money, cap or pre-money" }
+      ],
+      "guidance": "The headline table. Horizon columns are three and five years from today, mapped onto whichever commercial year they fall in. A horizon that precedes launch prints the pre-launch marker rather than a figure."
+    },
+    {
+      "key": "horizon_note",
+      "label": "Horizon and launch basis",
+      "zone": "column_1",
+      "section": "value_creation",
+      "type": "text",
+      "max_words": 40,
+      "required": true,
+      "source_types": ["CALCULATED", "DECK", "ASSUMPTION"],
+      "placeholder": "Horizons are measured from today ({{ANALYSIS DATE}}), not from the deck's calendar. Commercial launch is modelled at {{LAUNCH DATE}} — {{LAUNCH BASIS}}.",
+      "guidance": "States the clock the whole page runs on and where the launch date came from, so a reader can see whether it is a deck figure or an analyst assumption."
+    },
+    {
+      "key": "tam_reconciliation_note",
+      "label": "TAM reconciliation",
+      "zone": "column_1",
+      "section": "value_creation",
+      "type": "text",
+      "max_words": 44,
+      "required": false,
+      "source_types": ["CALCULATED", "DECK"],
+      "placeholder": "{{MANAGEMENT TAM vs BOTTOMS-UP MARKET, WITH THE DIVERGENCE STATED AND THE BASE USED FOR PENETRATION NAMED}}",
+      "guidance": "Compares management's stated TAM with the bottoms-up market built from the deck's own account count and pricing. States the discrepancy rather than reconciling it away. Omitted only when the deck states no TAM and no addressable base."
+    },
+
+    {
+      "key": "revenue_build_table",
+      "label": "Cohort revenue build",
+      "zone": "column_2",
+      "section": "revenue_build",
+      "type": "table",
+      "required": true,
+      "source_types": ["CALCULATED"],
+      "row_count": 5,
+      "column_widths": [0.16, 0.15, 0.17, 0.24, 0.28],
+      "columns": [
+        { "key": "year", "label": "Year", "align": "left", "placeholder": "CY{{n}}" },
+        { "key": "new_units", "label": "New", "align": "right", "placeholder": "{{NEW {{ADOPTION UNIT PLURAL}} WON}}" },
+        { "key": "active_units", "label": "Active", "align": "right", "placeholder": "{{ACTIVE {{ADOPTION UNIT PLURAL}}}}" },
+        { "key": "beneficiaries", "label": "{{BENEFICIARY LABEL}}", "align": "right", "placeholder": "{{BENEFICIARIES SERVED THAT YEAR}}" },
+        { "key": "revenue", "label": "Revenue", "align": "right", "placeholder": "{{REVENUE}}" }
+      ],
+      "guidance": "One row per commercial year, CY1 to CY5. Built bottoms-up from cohorts: accounts won each year, each ramping toward mature utilisation on its own clock. Never a growth rate applied to a market size."
+    },
+    {
+      "key": "headline_assumption",
+      "label": "Headline assumption",
+      "zone": "column_2",
+      "section": "revenue_build",
+      "type": "text",
+      "max_words": 24,
+      "required": true,
+      "emphasis": "bold",
+      "source_types": ["DECK", "ASSUMPTION"],
+      "placeholder": "Key assumption: {{SENSITIVITY DRIVER}} = {{VALUE}} {{UNIT}}.",
+      "guidance": "Names the single assumption the revenue build turns on — normally mature volume per adoption unit, but the acquisition rate where revenue is mostly one-off, or price where it is mostly recurring."
+    },
+    {
+      "key": "sensitivity_statement",
+      "label": "Sensitivity",
+      "zone": "column_2",
+      "section": "revenue_build",
+      "type": "text",
+      "max_words": 30,
+      "required": true,
+      "emphasis": "italic",
+      "source_types": ["CALCULATED"],
+      "placeholder": "At {{SENSITIVITY FRACTION}} of {{SENSITIVITY DRIVER}} → CY5 revenue falls from {{UPSIDE REVENUE}} to {{LOWER REVENUE}}.",
+      "guidance": "The lower-utilisation case run through the same cohort build. Shows what the fifth commercial year becomes when the headline assumption is dialled back."
+    },
+    {
+      "key": "customer_economics",
+      "label": "Customer economics",
+      "zone": "column_2",
+      "section": "revenue_build",
+      "type": "text",
+      "max_words": 30,
+      "required": false,
+      "source_types": ["CALCULATED", "DECK"],
+      "placeholder": "Customer economics: {{ANNUAL VALUE CREATED}} of annual value against {{ANNUAL SPEND}} of spend — {{RATIO}}× value-to-spend.",
+      "guidance": "Value created for one fully ramped account against the spend captured from it. Omitted when the deck gives no basis to quantify customer value."
+    },
+
+    {
+      "key": "returns_table",
+      "label": "Exit outcomes",
+      "zone": "column_2",
+      "section": "valuation_return",
+      "type": "table",
+      "required": true,
+      "source_types": ["CALCULATED"],
+      "column_widths": [0.245, 0.195, 0.22, 0.17, 0.17],
+      "columns": [
+        { "key": "outcome", "label": "Outcome", "align": "left", "placeholder": "{{OUTCOME}} · CY{{n}}" },
+        { "key": "revenue", "label": "Revenue", "align": "right", "placeholder": "{{REVENUE AT EXIT}}" },
+        { "key": "exit_value", "label": "Exit value", "align": "right", "placeholder": "{{ENTERPRISE VALUE}}" },
+        { "key": "ownership", "label": "Own.", "align": "right", "placeholder": "{{INVESTOR OWNERSHIP}}" },
+        { "key": "moic", "label": "MOIC", "align": "right", "placeholder": "{{GROSS MOIC}}×" }
+      ],
+      "rows": [
+        { "key": "earlier", "label": "Earlier exit", "note": "Exit before full commercial scale: less dilution, lower valuation." },
+        { "key": "scale", "label": "Scale exit", "note": "Held through commercial scale: higher valuation, more dilution." }
+      ],
+      "guidance": "Both outcomes from the same band and the same ownership path, so the trade-off between dilution and scale is visible on one line each."
+    },
+    {
+      "key": "multiple_band_basis",
+      "label": "Valuation multiple basis",
+      "zone": "column_2",
+      "section": "valuation_return",
+      "type": "text",
+      "max_words": 34,
+      "required": true,
+      "source_types": ["RESEARCH", "ASSUMPTION"],
+      "footnote_markers": true,
+      "placeholder": "Multiple range {{LOW}}×–{{HIGH}}× revenue — {{BASIS}}.",
+      "guidance": "The band and where it came from. Must say plainly whether it rests on verified transactions or is an analyst range. Carries footnote markers to the transactions that contributed a multiple, and only to those."
+    },
+    {
+      "key": "ownership_path",
+      "label": "Ownership and dilution",
+      "zone": "column_2",
+      "section": "valuation_return",
+      "type": "text",
+      "max_words": 40,
+      "required": true,
+      "source_types": ["CALCULATED", "DECK", "ASSUMPTION"],
+      "placeholder": "{{INVESTMENT}} into a {{INSTRUMENT}} at {{CONVERSION BASIS}} = {{ENTRY OWNERSHIP}} at entry, diluting to {{EXIT OWNERSHIP}} at scale across {{TOTAL FINANCING}} of modelled financing.",
+      "guidance": "Converts the cheque into a percentage, then dilutes it through every modelled round and option-pool top-up. Never assumes the investor holds their entry percentage."
+    },
+    {
+      "key": "exit_claim_test",
+      "label": "Deck exit claim tested",
+      "zone": "column_2",
+      "section": "valuation_return",
+      "type": "text",
+      "max_words": 42,
+      "required": false,
+      "emphasis": "italic",
+      "source_types": ["CALCULATED", "DECK"],
+      "verdicts": ["Understated", "Reasonable", "Overstated", "Mistimed", "Undated", "Internally inconsistent", "Not stated"],
+      "placeholder": "Deck exit claim: {{VERDICT}}. Deck exit: {{STATED VALUE}} in {{STATED YEAR}}. Model-supported range: {{LOW}}–{{HIGH}} at CY{{n}}, on modelled revenue of {{REVENUE}}. {{QUANTIFIED DIFFERENCE}}",
+      "guidance": "Management's stated exit measured against the independent model, with the difference quantified. Omitted only when the deck states no exit value and no exit year."
+    },
+
+    {
+      "key": "benchmark_comparables",
+      "label": "Comparable revenue ramps",
+      "zone": "column_3",
+      "section": "benchmark",
+      "type": "list",
+      "min_items": 0,
+      "max_items": 3,
+      "required": false,
+      "source_types": ["RESEARCH"],
+      "footnote_markers": true,
+      "item_placeholder": "{{COMPANY}}{{FOOTNOTE}} — {{EARLY REVENUE}} → {{LATER REVENUE}} over {{N}} years.",
+      "empty_placeholder": "No comparable company revenue history could be verified from a retrievable source, so the modelled ramp is unbenchmarked.",
+      "guidance": "Real companies in the closest comparable category, with revenue retrieved from a primary source. A comparable without a URL is dropped rather than shown. An empty set is a valid outcome and is stated as one."
+    },
+    {
+      "key": "benchmark_verdict",
+      "label": "Benchmark verdict",
+      "zone": "column_3",
+      "section": "benchmark",
+      "type": "text",
+      "max_words": 24,
+      "required": true,
+      "emphasis": "bold",
+      "source_types": ["CALCULATED", "RESEARCH"],
+      "placeholder": "Modelled adoption is {{below | approximately at | above}} comparable adoption.",
+      "guidance": "Where the modelled curve sits against the comparables. Where there are none, says so and what that means for confidence."
+    },
+    {
+      "key": "benchmark_explanation",
+      "label": "Benchmark explanation",
+      "zone": "column_3",
+      "section": "benchmark",
+      "type": "text",
+      "max_words": 40,
+      "required": false,
+      "source_types": ["CALCULATED", "RESEARCH"],
+      "placeholder": "{{WHY THE MODELLED CURVE SITS WHERE IT DOES AGAINST THE COMPARABLE RAMPS}}",
+      "guidance": "One or two sentences of reasoning. Should name the years where the modelled curve diverges from the comparables rather than asserting a verdict."
+    },
+
+    {
+      "key": "conditions_compact",
+      "label": "Conditions, compact form",
+      "zone": "column_3",
+      "section": "what_has_to_be_true",
+      "type": "text",
+      "max_words": 30,
+      "required": true,
+      "emphasis": "bold",
+      "source_types": ["ASSUMPTION", "CALCULATED"],
+      "placeholder": "{{CONDITION 1}} | {{CONDITION 2}} | {{CONDITION 3}} | {{CONDITION 4}} | {{CONDITION 5}}",
+      "guidance": "The five governing conditions as four-to-six word fragments joined by pipes, so the page carries a scannable summary above the expanded list."
+    },
+    {
+      "key": "conditions",
+      "label": "Conditions",
+      "zone": "column_3",
+      "section": "what_has_to_be_true",
+      "type": "list",
+      "min_items": 5,
+      "max_items": 7,
+      "display_items": 6,
+      "required": true,
+      "source_types": ["ASSUMPTION", "DECK", "CALCULATED"],
+      "bullet": "›",
+      "item_placeholder": "{{CONDITION}} — {{MODEL ASSUMPTION}} {{(low confidence) IF APPLICABLE}}",
+      "item_fields": [
+        { "key": "condition", "label": "Condition", "guidance": "What has to hold, stated as an outcome." },
+        { "key": "assumption", "label": "Model assumption", "guidance": "The value the model actually used." },
+        { "key": "why_it_matters", "label": "Why it matters", "guidance": "Which part of the outcome it drives. Carried in the sidecar." },
+        { "key": "if_it_fails", "label": "If it fails", "guidance": "What breaks. Carried in the sidecar." },
+        { "key": "confidence", "label": "Confidence", "guidance": "HIGH, MEDIUM or LOW. LOW is marked in accent red on the page." },
+        { "key": "compact", "label": "Compact form", "guidance": "Four to six words, for the compact line above." }
+      ],
+      "guidance": "The five to seven assumptions that drive most of the outcome. Drawn from the low-confidence assumptions and the validation findings, so the conditions are the real risks rather than a generic risk list."
+    },
+
+    {
+      "key": "interpretation_success",
+      "label": "Success case",
+      "zone": "column_3",
+      "section": "interpretation",
+      "type": "keyvalue",
+      "max_words": 45,
+      "required": true,
+      "source_types": ["CALCULATED", "ASSUMPTION"],
+      "placeholder": "Success case: {{PROBABILITY BAND}} — {{WHAT THE MODELLED OUTCOME IS IF THE PLAN WORKS}}",
+      "guidance": "States the analytical probability band assigned to the success case and the outcome it produces. The band is chosen deterministically from evidence quality, not written by the model, and must not be presented as a statistical estimate."
+    },
+    {
+      "key": "interpretation_base",
+      "label": "Base case",
+      "zone": "column_3",
+      "section": "interpretation",
+      "type": "keyvalue",
+      "max_words": 45,
+      "required": true,
+      "source_types": ["CALCULATED", "ASSUMPTION"],
+      "placeholder": "Base case: {{WHAT SLOWER ADOPTION, LOWER UTILISATION OR DELAYED LAUNCH PRODUCES}}",
+      "guidance": "The likely slower outcome, tied to the sensitivity case and the financing it would additionally require."
+    },
+    {
+      "key": "interpretation_downside",
+      "label": "Downside",
+      "zone": "column_3",
+      "section": "interpretation",
+      "type": "keyvalue",
+      "max_words": 45,
+      "required": true,
+      "source_types": ["CALCULATED", "ASSUMPTION"],
+      "placeholder": "Downside: {{THE SINGLE MOST LIKELY FAILURE MODE, NAMED SPECIFICALLY}}",
+      "guidance": "One named failure mode drawn from the governing conditions — not a list of everything that could go wrong."
+    },
+
+    {
+      "key": "analyst_flags",
+      "label": "Analyst flags",
+      "zone": "footer",
+      "type": "list",
+      "max_items": 4,
+      "required": false,
+      "source_types": ["CALCULATED"],
+      "marker": "▲",
+      "item_max_words": 30,
+      "item_placeholder": "▲ {{VALIDATION FINDING}}",
+      "overflow_placeholder": "(+{{N}} more in the JSON)",
+      "guidance": "Validation findings at ERROR or WARNING severity, one line per distinct rule so a repeated finding across years does not crowd out an unseen one. Findings are reported, never resolved by editing an assumption.",
+      "severities": ["ERROR", "WARNING", "NOTE"],
+      "rules_checked": [
+        "timeline.contradiction — exit before launch, approval after the launch it gates, runway short of the timeline it funds, stale deck calendar",
+        "revenue.volume / revenue.price / revenue.cohort — the build agrees with volume × price and cohorts do not exceed accounts won",
+        "revenue.zero — no revenue in any modelled year",
+        "market.penetration / market.accounts — penetration within 100%, active accounts within the addressable base",
+        "market.population — beneficiaries against the eligible population",
+        "market.revenue / market.tam_exceeded — modelled revenue against the addressable market and the stated TAM",
+        "market.tam — management TAM against the bottoms-up build",
+        "pricing.value — value created per account against spend captured",
+        "valuation.identity / valuation.evidence — value equals revenue × multiple; the band's evidentiary basis",
+        "ownership.bounds / ownership.dilution / ownership.terms — ownership within 0–100% and diluting",
+        "financing.sufficiency / financing.runway — capital modelled through to commercial scale",
+        "exit.claim — management's exit claim against the model"
+      ]
+    },
+    {
+      "key": "sources",
+      "label": "Numbered sources",
+      "zone": "footer",
+      "type": "footnotes",
+      "required": false,
+      "source_types": ["RESEARCH"],
+      "item_placeholder": "{{N}} {{SOURCE ORGANISATION}} · {{DOCUMENT TITLE}} {{URL}}",
+      "empty_placeholder": "Sources: no external source was retrieved for this analysis; all figures are deck-derived, analyst assumptions, or calculated from them.",
+      "guidance": "Every external claim on the page carries a number pointing here. Numbering follows first appearance, deduplicated by URL. Deck-derived figures are cited to a slide in the JSON sidecar rather than footnoted on the page."
+    }
+  ],
+
+  "rules": [
+    "Do not hallucinate missing deck data. An absent field is an absent field.",
+    "Do not confuse deck claims with analyst assumptions. Every value carries its source type.",
+    "Do not use management's TAM as the revenue forecast.",
+    "Do not use a growth rate as a substitute for a bottoms-up adoption model.",
+    "Do not use remembered comparable-company financials. Research them, and drop anything without a URL.",
+    "Do not calculate an acquisition multiple unless a source states both the transaction value and the trailing revenue.",
+    "Do not assume the financing rounds in the deck are sufficient to reach the modelled scale.",
+    "Do not assume investors hold their initial ownership percentage. Model dilution through every round.",
+    "Do not let the language model perform arithmetic that Python can calculate deterministically.",
+    "Do not silently repair contradictory deck timelines. Flag them.",
+    "Do not present the success case as the expected outcome.",
+    "Every material number must be traceable to DECK, RESEARCH, ASSUMPTION or CALCULATED.",
+    "Price and volume must share a denomination: a per-unit price is multiplied only by a count of that same unit.",
+    "The addressable base must count the adoption unit being modelled, or penetration is meaningless."
+  ],
+
+  "formatting": {
+    "typography": {
+      "base_font": "Helvetica",
+      "bold_font": "Helvetica-Bold",
+      "italic_font": "Helvetica-Oblique",
+      "fit_strategy": "Ten type profiles from 11pt body down to 6.2pt. The build takes the first profile whose three columns all fit, so the page is set as large as the content allows rather than as small as it must be.",
+      "one_page": "Hard constraint. A column that would overrun its frame forces a tighter profile rather than spilling into the next column."
+    },
+    "palette": {
+      "navy": "#0A2342",
+      "ink": "#1B1F27",
+      "muted": "#5A6472",
+      "ghost": "#8A8F98",
+      "rule": "#C9D2DE",
+      "band": "#F2F4F7",
+      "accent": "#1F6FB2",
+      "flag": "#A5402A"
+    },
+    "number_formats": {
+      "money": "$1.2B / $47.3M / $850k / $1,200",
+      "money_range": "$29–40M — one shared scale suffix so a range fits a narrow column",
+      "count": "1.2M / 47k / 1,250 / 12",
+      "percent": "12.2% / 0.05%",
+      "multiple": "4.5×",
+      "date": "DD Month YYYY"
+    },
+    "tables": {
+      "header_row": "white bold on navy",
+      "first_column": "bold label, left aligned",
+      "body_cells": "regular, right aligned, wrapping inside the cell",
+      "row_banding": "alternating white and band grey",
+      "rules": "hairline row rules and a box in rule grey"
+    },
+    "section_heading": "Numbered, upper case, navy bold, followed by a hairline rule",
+    "spacing": "Leftover column height is distributed between sections as gaps, capped so a short column does not read as empty"
+  }
+}

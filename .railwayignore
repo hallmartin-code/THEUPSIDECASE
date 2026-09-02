@@ -1,0 +1,11 @@
+# Never upload local secrets or generated artefacts to the build.
+# ANTHROPIC_API_KEY belongs in the Railway service variables, not in an image.
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+.cache/
+output/
+inputs/*
+!inputs/.gitkeep
