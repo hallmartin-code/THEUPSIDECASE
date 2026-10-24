@@ -43,8 +43,9 @@ def build_client(client: Any | None = None) -> Any:
 
     import anthropic
 
-    key = (os.getenv("ANTHROPIC_API_KEY") or "").strip()
-    token = (os.getenv("ANTHROPIC_AUTH_TOKEN") or "").strip()
+    # Dashboards such as Railway store quotes literally if a value is pasted with them.
+    key = (os.getenv("ANTHROPIC_API_KEY") or "").strip().strip("\"'").strip()
+    token = (os.getenv("ANTHROPIC_AUTH_TOKEN") or "").strip().strip("\"'").strip()
     if not key and not token:
         raise CredentialsError(_no_credentials_message())
 
